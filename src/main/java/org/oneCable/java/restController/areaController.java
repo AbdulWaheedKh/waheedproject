@@ -9,15 +9,20 @@ import org.oneCable.java.exceptions.UserNotFoundException;
 import org.oneCable.java.model.area;
 import org.oneCable.java.utils.AppUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
+@RequestMapping("/areaResource")
+@SuppressWarnings("unchecked")
 public class areaController {
 
 	@Autowired
@@ -31,10 +36,10 @@ public class areaController {
 	public List<area> getAllareas() throws Exception {
 
 		List<area> areas = null;
-		areas = managerObj.getAllStudent();
+		areas = managerObj.getAllAreas();
 
 		return areas;
-
+ 
 	}
 
 	/**
@@ -43,16 +48,17 @@ public class areaController {
 	 * @throws Exception
 	 */
 	@PostMapping("/createNewArea")
-	public area createStudent(@Valid @RequestBody area student) throws Exception {
+	public area createStudent(@RequestBody area student) throws Exception {
 		Boolean isBadRequest = false;
 		String message = "";
-
+        System.out.println(" Area to string >>" +student.toString());
 		if (!AppUtility.isEmpty(student.getId())) {
 			message = "Id must be null";
 			isBadRequest = true;
 		} else {
 			try {
-
+				student.setCreated(AppUtility.getCurrentTimeStamp());
+				student.setModified(AppUtility.getCurrentTimeStamp());
 				student = managerObj.saveSingleStudent(student);
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
@@ -63,8 +69,8 @@ public class areaController {
 
 	}
 
-	@PutMapping("/editArea/{id}")
-	public area editAreaById(@PathVariable Long id, @RequestBody area nArea) throws Exception {
+	@PutMapping("/editArea")
+	public area editAreaById(@RequestBody area nArea) throws Exception {
 
 		Boolean isBadRequest = false;
 		String message = "";
@@ -73,6 +79,8 @@ public class areaController {
 			message = "Id must not be null";
 			isBadRequest = true;
 		}
+		nArea.setCreated(AppUtility.getCurrentTimeStamp());
+		nArea.setModified(AppUtility.getCurrentTimeStamp());
 		nArea = managerObj.saveSingleStudent(nArea);
 
 		return nArea;
@@ -92,6 +100,33 @@ public class areaController {
 		return nArea;
 
 	}
+	
+	@DeleteMapping("/{id}")
+	public Integer deleteAcademicYear(@PathVariable Long id) throws Exception
+		//	throws CustomException, DataValidationException, PTPConstraintVoilationException
+	{
+		if (AppUtility.isEmpty(id)) {
+			String message = "Id must not be null!";
+			throw new Exception(message);
+		}
+		Integer count = null;
+		try {
+			count = managerObj.markAcademicYearAsDeletedById(id);
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+
+		return count;
+	}
+	
+//	@DeleteMapping("/{id}")
+//	public void DelEmpById(@PathVariable Long id) throws Exception {
+//	
+//		Employee employee = null;
+////		try {
+//		managerObj.deleteById(id);
+//
+//	}
 
 	
 }

@@ -14,18 +14,19 @@ import lombok.Data;
 public class area {
 	
 	   @Id 
-	   @GeneratedValue(strategy = GenerationType.AUTO)
-	   private Long Id;
+	   //@GeneratedValue(strategy = GenerationType.AUTO)
+	   @GeneratedValue(strategy = GenerationType.IDENTITY)
+	   private Long id;
 	   
-	   private String Name;
+	   private String name;
 	   
-	   private String Description;
+	   private String description;
 	   
-	   private boolean IsActive;
+	   private boolean isActive;
 	   
-	   private Timestamp Created;
+	   private Timestamp created;
 
-	   private Timestamp Modified;
+	   private Timestamp modified;
 	   
-	   private boolean Deleted;
+	   private boolean deleted;
 }

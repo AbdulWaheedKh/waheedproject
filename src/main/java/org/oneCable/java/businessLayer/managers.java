@@ -2,6 +2,8 @@ package org.oneCable.java.businessLayer;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.oneCable.java.model.account;
 import org.oneCable.java.model.area;
 import org.oneCable.java.model.menuitem;
@@ -123,7 +125,7 @@ public class managers {
 	 *  																   *
 	 *  ********************************************************************/
 
-	public List<area> getAllStudent() {
+	public List<area> getAllAreas() {
 		return areaRepositoryObj.getAllAreas();
 	}
 
@@ -135,6 +137,12 @@ public class managers {
 	public area getAreaById(Long id) {
 
 		return areaRepositoryObj.getareaById(id);
+	}
+	
+	@Transactional
+	public int markAcademicYearAsDeletedById(Long id) throws Exception {
+		//return academicYearRepository.markAcademicYearAsDeletedById(id, true, AppUtility.getDeleteStamp());
+		return areaRepositoryObj.markAcademicYearAsDeletedById(id);
 	}
 
 	
